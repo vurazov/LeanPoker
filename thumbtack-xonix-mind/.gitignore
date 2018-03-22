@@ -1,8 +1,0 @@
-# Add any directories, files, or patterns you don't want to be tracked by version control
-# Created by .ignore support plugin (hsz.mobi)
-.idea/
-thumbtack-xonix-mind.iml
-target/
-.gradle/
-
-
