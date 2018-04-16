@@ -1,0 +1,7 @@
+com/lineate/xonix/mind/model/Move.class
+com/lineate/xonix/mind/model/Point.class
+com/lineate/xonix/mind/model/Bot.class
+com/lineate/xonix/mind/model/CellType.class
+com/lineate/xonix/mind/model/GameStateView.class
+com/lineate/xonix/mind/model/Cell.class
+com/lineate/xonix/mind/model/Cell$1.class
