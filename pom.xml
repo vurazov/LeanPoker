@@ -49,34 +49,11 @@
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
-                            <outputDirectory>./</outputDirectory>
-                            <finalName>${project.name}</finalName>
+                            <finalName>result-${project.name}</finalName>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-clean-plugin</artifactId>-->
-                <!--<version>3.1.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>prepare-package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>clean</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<filesets>-->
-                                <!--<fileset>-->
-                                    <!--<directory>${basedir}</directory>-->
-                                    <!--<includes>-->
-                                        <!--<include>**/*.jar</include>-->
-                                    <!--</includes>-->
-                                <!--</fileset>-->
-                            <!--</filesets>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -104,11 +81,6 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>1.3.1</version>
         </dependency>
     </dependencies>
 </project>
