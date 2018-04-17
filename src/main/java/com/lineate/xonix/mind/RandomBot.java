@@ -27,9 +27,12 @@ public class RandomBot implements Bot {
 
     Move lastMove;
 
+    public RandomBot() {
+        this("RandomBot");
+    }
+
     public RandomBot(String name) {
-        this.name = name;
-        this.random = new Random(1000);
+        this(name, new Random(1000));
     }
 
     public RandomBot(String name, Random random) {
