@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * Hello world!
@@ -26,6 +27,8 @@ public class RandomBot implements Bot {
     Random random;
 
     Move lastMove;
+
+    Point destination;
 
     public RandomBot() {
         this("RandomBot");
@@ -45,6 +48,74 @@ public class RandomBot implements Bot {
     }
 
     public Move move(GameStateView gs) {
+        int id = gs.botId;
+        Cell[][] field = gs.field;
+        Point head = gs.head;
+        Map<Integer, List<Point>> bodies = getBodies(field);
+
+        // TODO this should be in the control loop
+        if (!bodies.containsKey(id))
+            return Move.STOP; // on the border or filled area
+
+        if (lastMove != null) {
+            Point newHead = calculateHead(field, head, lastMove);
+            // don't try to select the last move, if it is to bite itself
+            if (bodies.get(id).contains(newHead))
+                lastMove = null;
+        }
+
+        Move move = null;
+        // some attempts to move
+        for (int i = 0; i < attempts; i++) {
+            if (destination == null) {
+                destination = calculateDestination(random, gs, head);
+            } else {
+                // probably reset if we achieved the destination
+                // gs.field.cells[head] != Cell.Empty
+                val p = destination;
+                if (Math.abs(p.getRow() - head.getRow()) + Math.abs(p.getCol() - head.getCol()) <= 1)
+                    destination = null;
+            }
+            // now choose the move
+            if (destination != null) {
+                val ri = destination.getRow() - head.getRow();
+                val rj = destination.getCol() - head.getCol();
+                val r = random.nextInt(4 + Math.abs(ri) + Math.abs(rj));
+                move = ((Supplier<Move>) () -> {
+                    if (r < 4)
+                        return Move.values()[r];
+                    else if (r < 4 + Math.abs(ri)) {
+                        // vertical move
+                        return (ri < 0) ? Move.UP : Move.DOWN;
+                    } else {
+                        // horizontal move
+                        return (rj < 0) ? Move.LEFT : Move.RIGHT;
+                    }
+                }).get();
+                val newHead = calculateHead(field, head, move);
+                if (!bodies.get(id).contains(newHead))
+                    break;
+            } else if (lastMove == null) {
+                move = Move.values()[random.nextInt(4)];
+                val newHead = calculateHead(field, head, move);
+                if (!bodies.get(id).contains(newHead))
+                    break;
+            } else {
+                // higher probability to choose the last move
+                val r = random.nextInt(16);
+                move = (r < 4) ? Move.values()[r] : lastMove;
+                val newHead = calculateHead(field, head, move);
+                if (!bodies.get(id).contains(newHead))
+                    break;
+            }
+        }
+
+        lastMove = (move == null) ? Move.STOP : move;
+        // if after all those attempts we don't found the move, just stay
+        return lastMove;
+    }
+
+    public Move move1(GameStateView gs) {
         int id = gs.botId;
         Cell[][] field = gs.field;
         Point point = gs.head;
@@ -125,4 +196,22 @@ public class RandomBot implements Bot {
         return bodies;
     }
 
+    private Point calculateDestination(Random random, GameStateView gs , Point head) {
+        val m = gs.field.length;
+        val n = gs.field[0].length;
+        // put several random dots into the field, and the first empty point
+        // is our destination
+        for (int k = 1; k<= 16; k++) {
+            val i = random.nextInt(m);
+            val j = random.nextInt(n);
+            val p = Point.of(i, j);
+            if (gs.field[p.getRow()][p.getCol()].getCellType() == CellType.EMPTY) {
+                if (p != head) {
+                    return p;
+                }
+            }
+        }
+        // cannot choose the destination
+        return null;
+    }
 }
