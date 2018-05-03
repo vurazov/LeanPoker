@@ -13,7 +13,7 @@
     <repositories>
         <repository>
             <id>xonix-mvn-repo</id>
-            <url>https://raw.github.com/vurazov/xonix-bot/mvn-repo/</url>
+            <url>https://raw.github.com/lineate/xonix-bot/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
